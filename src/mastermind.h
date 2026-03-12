@@ -4,4 +4,5 @@ int matches(int,int);
 int hits(int, int);
 int misses(int, int);
 int match(int, int);
+int int_to_codeword(int);
 

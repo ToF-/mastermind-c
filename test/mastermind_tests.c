@@ -33,4 +33,11 @@ TEST(mastermind, match) {
   TEST_ASSERT_EQUAL(04, match(5321, 1235));
 }
 
+TEST(mastermind, int_to_codeword) {
+    TEST_ASSERT_EQUAL(1111, int_to_codeword(0));
+    TEST_ASSERT_EQUAL(1112, int_to_codeword(1));
+    TEST_ASSERT_EQUAL(1121, int_to_codeword(6));
+    TEST_ASSERT_EQUAL(6666, int_to_codeword(1295));
+}
+
 

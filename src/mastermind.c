@@ -41,3 +41,19 @@ int misses(int secret, int guess) {
 int match(int secret, int guess) {
     return matches(secret, guess) * 10 + misses(secret, guess);
 }
+
+/*
+ * 0012   =  1
+ *
+ */
+int int_to_codeword(int n) {
+    int result = 0;
+    int factor = 1;
+    int number = n;
+    for (int i = 0; i < MAX_PEGS; i++) {
+        result += ((number % MAX_COLORS) + 1) * factor;
+        number /= MAX_COLORS;
+        factor *= 10;
+    }
+    return result;
+}
