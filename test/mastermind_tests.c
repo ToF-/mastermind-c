@@ -40,4 +40,12 @@ TEST(mastermind, int_to_codeword) {
     TEST_ASSERT_EQUAL(6666, int_to_codeword(1295));
 }
 
+TEST(mastermind, initial_set) {
+    struct codeword_set *set = make_codeword_set();
+    init_set(set);
+    TEST_ASSERT_EQUAL(1111, next_codeword(set));
+    TEST_ASSERT_EQUAL(1112, next_codeword(set));
+    destroy_codeword_set(set);
+}
+
 
