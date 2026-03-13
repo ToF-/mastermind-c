@@ -129,6 +129,26 @@ int next_codeword(struct codeword_set *set) {
     }
 }
 
+int max_match_results(int codeword, struct codeword_set *set) {
+    static int results[MAX_RESULT_VALUES];
+    for (int i = 0; i < MAX_RESULT_VALUES; i++) {
+        results[i] = 0;
+    }
+    init_set(set);
+    int candidate;
+    while((candidate = next_codeword(set))) {
+        int value = match(codeword, candidate);
+        results[value]++;
+    }
+    int max_result = 0;
+    for (int i = 0; i < MAX_RESULT_VALUES; i++) {
+        if (results[i] > max_result) {
+            max_result = results[i];
+        }
+    }
+    return max_result;
+}
+
 void destroy_codeword_set(struct codeword_set *set) {
     free(set->set);
     free(set);

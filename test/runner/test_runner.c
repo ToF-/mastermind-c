@@ -8,4 +8,5 @@ TEST_GROUP_RUNNER(mastermind) {
     RUN_TEST_CASE(mastermind, int_to_codeword);
     RUN_TEST_CASE(mastermind, initial_set);
     RUN_TEST_CASE(mastermind, empty_set_and_insert);
+    RUN_TEST_CASE(mastermind, max_match_results);
 }

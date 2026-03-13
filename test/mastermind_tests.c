@@ -64,4 +64,9 @@ TEST(mastermind, empty_set_and_insert) {
     destroy_codeword_set(set);
 }
 
-
+TEST(mastermind, max_match_results) {
+    struct codeword_set *set = make_codeword_set();
+    init_set(set);
+    TEST_ASSERT_EQUAL(256, max_match_results(1122, set));
+    destroy_codeword_set(set);
+}
