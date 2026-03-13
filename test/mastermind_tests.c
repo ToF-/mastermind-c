@@ -38,6 +38,8 @@ TEST(mastermind, int_to_codeword) {
     TEST_ASSERT_EQUAL(1112, int_to_codeword(1));
     TEST_ASSERT_EQUAL(1121, int_to_codeword(6));
     TEST_ASSERT_EQUAL(6666, int_to_codeword(1295));
+    TEST_ASSERT_EQUAL(0, codeword_to_int(1111));
+    TEST_ASSERT_EQUAL(1295, codeword_to_int(6666));
 }
 
 TEST(mastermind, initial_set) {
@@ -45,6 +47,20 @@ TEST(mastermind, initial_set) {
     init_set(set);
     TEST_ASSERT_EQUAL(1111, next_codeword(set));
     TEST_ASSERT_EQUAL(1112, next_codeword(set));
+    TEST_ASSERT(in_set(set, 1111));
+    TEST_ASSERT(in_set(set, 6666));
+    destroy_codeword_set(set);
+}
+
+TEST(mastermind, empty_set_and_insert) {
+    struct codeword_set *set = make_codeword_set();
+    empty_set(set);
+    insert_set(set, 1111);
+    insert_set(set, 2411);
+    TEST_ASSERT_FALSE(in_set(set, 6666));
+    TEST_ASSERT_EQUAL(1111, next_codeword(set));
+    TEST_ASSERT_EQUAL(2411, next_codeword(set));
+    TEST_ASSERT_EQUAL(0, next_codeword(set));
     destroy_codeword_set(set);
 }
 

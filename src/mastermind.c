@@ -55,6 +55,17 @@ int int_to_codeword(int n) {
     return result;
 }
 
+int codeword_to_int(int codeword) {
+    int result = 0;
+    int factor = 1;
+    for (int i = 0; i < MAX_PEGS; i++) {
+        result += ((codeword % 10) - 1) * factor;
+        codeword /= 10;
+        factor *= 6;
+    }
+    return result;
+}
+
 int power(int n, int p) {
     int result = 1;
     for (int i = 0; i<p; i++) {
@@ -83,9 +94,26 @@ void init_set(struct codeword_set *set) {
 
 int set_contains(struct codeword_set *set, int n) {
     int offset = n / sizeof(char);
-    int bits = 2 << n % sizeof(char);
+    int bits = 2 << (n % sizeof(char));
     return set->set[offset] & bits;
-    
+}
+
+int in_set(struct codeword_set *set, int codeword) {
+    return set_contains(set, codeword_to_int(codeword));
+}
+
+void empty_set(struct codeword_set *set) {
+    for (int i = 0; i < set_size(); i++) {
+        set->set[i] = 0;
+    }
+    set->next = -1;
+}
+
+void insert_set(struct codeword_set *set, int codeword) {
+    int n = codeword_to_int(codeword);
+    int offset = n / sizeof(char);
+    int bits = 2 << (n % sizeof(char));
+    set->set[offset] |= bits;
 }
 
 int next_codeword(struct codeword_set *set) {
