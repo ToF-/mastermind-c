@@ -1,0 +1,15 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.8	//
+CLEANUP	Makefile	/^CLEANUP = rm -f$/;"	m
+C_COMPILER	Makefile	/^C_COMPILER=clang$/;"	m
+C_COMPILER	Makefile	/^C_COMPILER=gcc$/;"	m
+INC_DIRS	Makefile	/^INC_DIRS=-Isrc -I$(UNITY_ROOT)\/src -I$(UNITY_ROOT)\/extras\/fixture\/src -I$(UNITY_ROOT)\/extras\/memory\/src$/;"	m
+SRC_FILES	Makefile	/^SRC_FILES=src\/mastermind.c $(UNITY_ROOT)\/src\/unity.c $(UNITY_ROOT)\/extras\/memory\/src\/unity_memory.c $(UNITY_ROOT)\/extras\/fixture\/src\/unity_fixture.c  $(TEST_FILES)$/;"	m
+TEST_FILES	Makefile	/^TEST_FILES=test\/*.c test\/runner\/*.c$/;"	m
+TEST_TARGET	Makefile	/^TEST_TARGET=bin\/run_test$/;"	m
+UNITY_ROOT	Makefile	/^UNITY_ROOT=unity$/;"	m
+strip	gen_test_runner.awk	/^function strip(str) {$/;"	f

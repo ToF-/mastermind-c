@@ -5,9 +5,15 @@
 
 TEST_GROUP(mastermind);
 
-TEST_SETUP(mastermind) { }
+struct codeword_set *my_set;
 
-TEST_TEAR_DOWN(mastermind) { }
+TEST_SETUP(mastermind) {
+    my_set = make_codeword_set();
+}
+
+TEST_TEAR_DOWN(mastermind) { 
+    destroy_codeword_set(my_set);
+}
 
 TEST(mastermind, matches) {
   TEST_ASSERT_EQUAL(2, matches(1234, 6334));
@@ -31,6 +37,7 @@ TEST(mastermind, match) {
   TEST_ASSERT_EQUAL(12, match(1235, 6325));
   TEST_ASSERT_EQUAL(40, match(1235, 1235));
   TEST_ASSERT_EQUAL(04, match(5321, 1235));
+  TEST_ASSERT_EQUAL(30, match(1111, 1116));
 }
 
 TEST(mastermind, int_to_codeword) {
@@ -43,30 +50,40 @@ TEST(mastermind, int_to_codeword) {
 }
 
 TEST(mastermind, initial_set) {
-    struct codeword_set *set = make_codeword_set();
-    init_set(set);
-    TEST_ASSERT_EQUAL(1111, next_codeword(set));
-    TEST_ASSERT_EQUAL(1112, next_codeword(set));
-    TEST_ASSERT(in_set(set, 1111));
-    TEST_ASSERT(in_set(set, 6666));
-    destroy_codeword_set(set);
+    init_set(my_set);
+    TEST_ASSERT_EQUAL(1111, next_codeword(my_set));
+    TEST_ASSERT_EQUAL(1112, next_codeword(my_set));
+    for(int i = 0; i < 34; i++) {
+        next_codeword(my_set);
+    }
+    TEST_ASSERT_EQUAL(1211, next_codeword(my_set));
+    start_set(my_set);
+    TEST_ASSERT_EQUAL(1111, next_codeword(my_set));
+    TEST_ASSERT(in_set(my_set, 1111));
+    TEST_ASSERT(in_set(my_set, 1116));
+    TEST_ASSERT(in_set(my_set, 6666));
 }
 
 TEST(mastermind, empty_set_and_insert) {
-    struct codeword_set *set = make_codeword_set();
-    empty_set(set);
-    insert_set(set, 1111);
-    insert_set(set, 2411);
-    TEST_ASSERT_FALSE(in_set(set, 6666));
-    TEST_ASSERT_EQUAL(1111, next_codeword(set));
-    TEST_ASSERT_EQUAL(2411, next_codeword(set));
-    TEST_ASSERT_EQUAL(0, next_codeword(set));
-    destroy_codeword_set(set);
+    empty_set(my_set);
+    insert_set(my_set, 1111);
+    insert_set(my_set, 2411);
+    TEST_ASSERT_FALSE(in_set(my_set, 6666));
+    start_set(my_set);
+    TEST_ASSERT_EQUAL(1111, next_codeword(my_set));
+    TEST_ASSERT_EQUAL(2411, next_codeword(my_set));
+    TEST_ASSERT_EQUAL(0, next_codeword(my_set));
 }
 
 TEST(mastermind, max_match_results) {
-    struct codeword_set *set = make_codeword_set();
-    init_set(set);
-    TEST_ASSERT_EQUAL(256, max_match_results(1122, set));
-    destroy_codeword_set(set);
+    init_set(my_set);
+    TEST_ASSERT_EQUAL(256, max_match_results(1122, my_set));
 }
+
+TEST(mastermind, min_max_match_results) {
+    init_set(my_set);
+    struct codeword_set *all_codes = make_codeword_set();
+    TEST_ASSERT_EQUAL(1122, min_max_match_results(my_set, all_codes));
+    destroy_codeword_set(all_codes);
+}
+    

@@ -15,11 +15,13 @@ int int_to_codeword(int);
 int codeword_to_int(int);
 struct codeword_set * make_codeword_set();
 void init_set(struct codeword_set*);
+void start_set(struct codeword_set*);
 int in_set(struct codeword_set *, int);
 void empty_set(struct codeword_set*);
 void insert_set(struct codeword_set*, int);
 int next_codeword(struct codeword_set*);
 int max_match_results(int, struct codeword_set*);
+int min_max_match_results(struct codeword_set *, struct codeword_set*);
 void destroy_codeword_set(struct codeword_set*);
 
 

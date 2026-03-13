@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include "mastermind.h"
 #define min(a,b) (((a)<(b))?(a):(b))
+#define BITS (sizeof(char)*8)
 
 int matches(int secret, int guess) {
     int result = 0;
@@ -18,8 +19,8 @@ int matches(int secret, int guess) {
 }
 
 int hits(int secret, int guess) {
-    int secret_color_nb[MAX_COLORS] = { 0, 0, 0, 0, 0, 0 };
-    int guess_color_nb[MAX_COLORS] = { 0, 0, 0, 0, 0, 0 };
+    int secret_color_nb[MAX_COLORS+1] = { 0, 0, 0, 0, 0, 0, 0 };
+    int guess_color_nb[MAX_COLORS+1] =  { 0, 0, 0, 0, 0, 0, 0 };
     int codeword_a = secret;
     int codeword_b = guess;
     for (int i = 0; i < MAX_PEGS; i++) {
@@ -29,7 +30,7 @@ int hits(int secret, int guess) {
         codeword_b /= 10;
     }
     int result = 0;
-    for (int i = 0; i < MAX_COLORS; i++) {
+    for (int i = 1; i < MAX_COLORS+1; i++) {
         result += min(secret_color_nb[i], guess_color_nb[i]);
     }
     return result;
@@ -89,12 +90,16 @@ void init_set(struct codeword_set *set) {
     for (int i = 0; i < set_size(); i++) {
         set->set[i] = -1;
     }
+    start_set(set);
+}
+
+void start_set(struct codeword_set *set) {
     set->next = -1;
 }
 
 int set_contains(struct codeword_set *set, int n) {
-    int offset = n / sizeof(char);
-    int bits = 2 << (n % sizeof(char));
+    int offset = n / BITS;
+    int bits = 1 << (n % BITS);
     return set->set[offset] & bits;
 }
 
@@ -111,8 +116,8 @@ void empty_set(struct codeword_set *set) {
 
 void insert_set(struct codeword_set *set, int codeword) {
     int n = codeword_to_int(codeword);
-    int offset = n / sizeof(char);
-    int bits = 2 << (n % sizeof(char));
+    int offset = n / BITS;
+    int bits = 1 << (n % BITS);
     set->set[offset] |= bits;
 }
 
@@ -131,10 +136,12 @@ int next_codeword(struct codeword_set *set) {
 
 int max_match_results(int codeword, struct codeword_set *set) {
     static int results[MAX_RESULT_VALUES];
+    start_set(set);
     for (int i = 0; i < MAX_RESULT_VALUES; i++) {
         results[i] = 0;
     }
-    init_set(set);
+    start_set(set);
+
     int candidate;
     while((candidate = next_codeword(set))) {
         int value = match(codeword, candidate);
@@ -149,6 +156,21 @@ int max_match_results(int codeword, struct codeword_set *set) {
     return max_result;
 }
 
+int min_max_match_results(struct codeword_set *candidates, struct codeword_set *all_codewords) {
+    init_set(all_codewords);
+    int result;
+    int min_max_results = 1000000;
+    int codeword;
+    start_set(all_codewords);
+    while((codeword = next_codeword(all_codewords))) {
+        int max_result = max_match_results(codeword, candidates) * 2 + (in_set(candidates, codeword) ? 0 : 1);
+        if (max_result < min_max_results) {
+            min_max_results = max_result;
+            result = codeword;
+        }
+    }
+    return result;
+}
 void destroy_codeword_set(struct codeword_set *set) {
     free(set->set);
     free(set);
