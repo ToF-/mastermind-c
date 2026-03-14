@@ -113,4 +113,13 @@ TEST(mastermind, guess) {
     TEST_ASSERT_EQUAL(4615, moves[4].guess); 
     TEST_ASSERT_EQUAL(40, moves[4].result); 
 }
-    
+
+TEST(mastermind, total_moves) {
+    struct move moves[MAX_MOVES];
+    int codeword;
+    init_set(my_set);
+    empty_set(my_set); // comment this line to run the performance test
+    while((codeword = next_codeword(my_set))) {
+        TEST_ASSERT(guess(codeword, moves) <= 5);
+    }
+}

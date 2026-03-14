@@ -13,4 +13,5 @@ TEST_GROUP_RUNNER(mastermind) {
     RUN_TEST_CASE(mastermind, min_max_match_results);
     RUN_TEST_CASE(mastermind, remove_diff_match_result);
     RUN_TEST_CASE(mastermind, guess);
+    RUN_TEST_CASE(mastermind, total_moves);
 }

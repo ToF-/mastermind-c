@@ -12,6 +12,7 @@ struct codeword_set {
 struct move {
     int guess;
     int result;
+    int size;
 };
 
 int matches(int,int);

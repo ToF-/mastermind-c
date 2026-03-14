@@ -177,6 +177,7 @@ int min_max_match_results(struct codeword_set *candidates) {
     int result;
     int min_max_results = 1000000;
     int codeword;
+    start_set(all_codewords);
     while((codeword = next_codeword(all_codewords))) {
         int max_result = max_match_results(codeword, candidates) * 2 + (in_set(candidates, codeword) ? 0 : 1);
         if (max_result < min_max_results) {
@@ -207,6 +208,7 @@ int guess(int secret, struct move *moves) {
         result = match(secret, move);
         moves[counter].guess = move;
         moves[counter].result = result;
+        moves[counter].size = set_length(solution);
         counter++;
         remove_diff_match_result(solution, move, result);
         move = min_max_match_results(solution);

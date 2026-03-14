@@ -15,7 +15,7 @@ int main(int argc, char *argv[]) {
     struct move moves[MAX_MOVES];
     int count = guess(secret, moves);
     for (int i =0; i<count; i++) {
-        printf("%d) %d : %d\n", i+1, moves[i].guess, moves[i].result);
+        printf("%d) [%4d]\t %d : %d\n", i+1, moves[i].size, moves[i].guess, moves[i].result);
     }
     return 0;
 }
