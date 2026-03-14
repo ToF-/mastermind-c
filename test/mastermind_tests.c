@@ -51,6 +51,8 @@ TEST(mastermind, int_to_codeword) {
 
 TEST(mastermind, initial_set) {
     init_set(my_set);
+    TEST_ASSERT_EQUAL(1296, set_length(my_set));
+    start_set(my_set);
     TEST_ASSERT_EQUAL(1111, next_codeword(my_set));
     TEST_ASSERT_EQUAL(1112, next_codeword(my_set));
     for(int i = 0; i < 34; i++) {
@@ -75,6 +77,13 @@ TEST(mastermind, empty_set_and_insert) {
     TEST_ASSERT_EQUAL(0, next_codeword(my_set));
 }
 
+TEST(mastermind, remove_set) {
+    init_set(my_set);
+    remove_set(my_set, 2411);
+    TEST_ASSERT_FALSE(in_set(my_set, 2411));
+    TEST_ASSERT_EQUAL(1295, set_length(my_set));
+}
+
 TEST(mastermind, max_match_results) {
     init_set(my_set);
     TEST_ASSERT_EQUAL(256, max_match_results(1122, my_set));
@@ -82,8 +91,26 @@ TEST(mastermind, max_match_results) {
 
 TEST(mastermind, min_max_match_results) {
     init_set(my_set);
-    struct codeword_set *all_codes = make_codeword_set();
-    TEST_ASSERT_EQUAL(1122, min_max_match_results(my_set, all_codes));
-    destroy_codeword_set(all_codes);
+    TEST_ASSERT_EQUAL(1122, min_max_match_results(my_set));
+}
+
+TEST(mastermind, remove_diff_match_result) {
+    init_set(my_set);
+    remove_diff_match_result(my_set, 1122, 1);
+    TEST_ASSERT_EQUAL(256, set_length(my_set));
+}
+TEST(mastermind, guess) {
+    struct move moves[MAX_MOVES];
+    TEST_ASSERT_EQUAL(5, guess(4615, moves));
+    TEST_ASSERT_EQUAL(1122, moves[0].guess); 
+    TEST_ASSERT_EQUAL(1, moves[0].result); 
+    TEST_ASSERT_EQUAL(2344, moves[1].guess); 
+    TEST_ASSERT_EQUAL(1, moves[1].result); 
+    TEST_ASSERT_EQUAL(3516, moves[2].guess); 
+    TEST_ASSERT_EQUAL(12, moves[2].result); 
+    TEST_ASSERT_EQUAL(1461, moves[3].guess); 
+    TEST_ASSERT_EQUAL(3, moves[3].result); 
+    TEST_ASSERT_EQUAL(4615, moves[4].guess); 
+    TEST_ASSERT_EQUAL(40, moves[4].result); 
 }
     

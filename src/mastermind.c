@@ -93,6 +93,14 @@ void init_set(struct codeword_set *set) {
     start_set(set);
 }
 
+int set_length(struct codeword_set *set) {
+    int result = 0;
+    start_set(set);
+    while(next_codeword(set)) {
+        result++;
+    }
+    return result;
+}
 void start_set(struct codeword_set *set) {
     set->next = -1;
 }
@@ -119,6 +127,13 @@ void insert_set(struct codeword_set *set, int codeword) {
     int offset = n / BITS;
     int bits = 1 << (n % BITS);
     set->set[offset] |= bits;
+}
+
+void remove_set(struct codeword_set *set, int codeword) {
+    int n = codeword_to_int(codeword);
+    int offset = n / BITS;
+    int bits = (1 << (n % BITS)) ^ -1;
+    set->set[offset] &= bits;
 }
 
 int next_codeword(struct codeword_set *set) {
@@ -156,12 +171,12 @@ int max_match_results(int codeword, struct codeword_set *set) {
     return max_result;
 }
 
-int min_max_match_results(struct codeword_set *candidates, struct codeword_set *all_codewords) {
+int min_max_match_results(struct codeword_set *candidates) {
+    struct codeword_set *all_codewords = make_codeword_set();
     init_set(all_codewords);
     int result;
     int min_max_results = 1000000;
     int codeword;
-    start_set(all_codewords);
     while((codeword = next_codeword(all_codewords))) {
         int max_result = max_match_results(codeword, candidates) * 2 + (in_set(candidates, codeword) ? 0 : 1);
         if (max_result < min_max_results) {
@@ -169,8 +184,37 @@ int min_max_match_results(struct codeword_set *candidates, struct codeword_set *
             result = codeword;
         }
     }
+    destroy_codeword_set(all_codewords);
     return result;
 }
+
+void remove_diff_match_result(struct codeword_set *set, int codeword, int result) {
+    start_set(set);
+    int candidate;
+    while((candidate = next_codeword(set))) {
+        if (match(candidate, codeword) != result) {
+            remove_set(set, candidate);
+        }
+    }
+}
+int guess(int secret, struct move *moves) {
+    struct codeword_set *solution = make_codeword_set();
+    init_set(solution);
+    int move = 1122;
+    int counter = 0;
+    int result = 0;
+    while (result != 40 && counter < MAX_MOVES) {
+        result = match(secret, move);
+        moves[counter].guess = move;
+        moves[counter].result = result;
+        counter++;
+        remove_diff_match_result(solution, move, result);
+        move = min_max_match_results(solution);
+    }
+    destroy_codeword_set(solution);
+    return counter;
+}
+
 void destroy_codeword_set(struct codeword_set *set) {
     free(set->set);
     free(set);
